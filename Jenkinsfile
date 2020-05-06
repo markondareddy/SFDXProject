@@ -54,10 +54,10 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Convert Source to Metadata') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:source:convert --outputdir ${DEPLOYDIR}"
-		    if (rc != 0) {
-			error 'Salesforce convert source to metadata run failed.'
-		    }
+		    //rc = bat returnStatus: true, script: "${toolbelt} force:source:convert --outputdir ${DEPLOYDIR}"
+		    //if (rc != 0) {
+			//error 'Salesforce convert source to metadata run failed.'
+		    //}
 		}
 		
 		// -------------------------------------------------------------------------
@@ -65,10 +65,10 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Deploy and Run Tests') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:mdapi:deploy --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		    if (rc != 0) {
-			error 'Salesforce deploy and test run failed.'
-		    }
+		    //rc = bat returnStatus: true, script: "${toolbelt} force:mdapi:deploy --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		    //if (rc != 0) {
+			//error 'Salesforce deploy and test run failed.'
+		    //}
 		}
 
 
