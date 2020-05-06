@@ -6,11 +6,13 @@ node {
     def SF_USERNAME=env.SF_USERNAME
     def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
     def DEPLOYDIR='src'
+	def UATDEPLOYER='uat-deployer/'
     def TEST_LEVEL='NoTestRun'
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://test.salesforce.com"
 
 
     def toolbelt = tool 'toolbelt'
+	def bitbash = tool 'bitbash'
 	//def toolbelt = tool name: 'toolbelt', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
 	echo "toolbelt = ${toolbelt}"
 
@@ -48,6 +50,16 @@ node {
 			error 'Salesforce org authorization failed.'
 		    }
 		}
+		
+		// get updated files
+		stage('get update files from repo') {
+			//rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
+			rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
+		    if (rc != 0) {
+			error 'Salesforce org authorization failed.'
+		    }
+		}
+		
 
 		// -------------------------------------------------------------------------
 		// Convert metadata.
