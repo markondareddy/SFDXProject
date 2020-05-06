@@ -55,6 +55,7 @@ node {
 		stage('get update files from repo') {
 			//rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
 			//rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
+			
 			rc = bat returnStatus: true, script: "cd \"
 			rc = bat returnStatus: true, script: "cd c:\Program Files\Git"			
 			
