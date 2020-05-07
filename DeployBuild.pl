@@ -23,10 +23,9 @@ $Commit4="$ARGV[3]";
 $Commit5="$ARGV[4]";
 $Commit6="$ARGV[5]";
 
-//Package_File();
+
 GetFiles();
-//ParseGitFile();
-//CloseXML();
+
 
 sub ParseGitFile {
 	open(DeployFile, "$fileName");
