@@ -42,7 +42,7 @@ sub GetFiles {
 #	print `git diff --name-only HEAD~179 HEAD~181 > GitChanges.rtf`;
 #    print `git diff --name-only e446d9ac4f24c979496772cf1c3aa2f9eafcfe91 5381592f351f32885a2227116a5ba59acf66661b > GitChanges.rtf`;
 	print `git diff --name-only 4d81858cd0e5460b81cb871d903a945f4b96699a HEAD > GitChanges.rtf`;
-	git diff bc92ead1111a08e384dad5f5082aa4732fc3c2e8 HEAD;
+	git diff 4d81858cd0e5460b81cb871d903a945f4b96699a HEAD;
 	print " Done with GIT files ..\n";
 }
 
