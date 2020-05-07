@@ -66,6 +66,13 @@ node {
 		    }
 		}
 		
+		stage('call perl script') {
+			rc = bat returnStatus: true, script: "perl perl1.pl"
+		    if (rc != 0) {
+			error 'perl execution failed.'
+		    }
+		}
+		
 
 		// -------------------------------------------------------------------------
 		// Convert metadata.
