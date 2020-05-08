@@ -70,7 +70,7 @@ node {
 		
 		stage('call perl script') {
 			//rc = bat returnStatus: true, script: "perl perl1.pl"
-			rc = bat returnStatus: true, script: "perl DeployBuild.pl"
+			//rc = bat returnStatus: true, script: "perl DeployBuild.pl"
 		    if (rc != 0) {
 			error 'perl execution failed.'
 		    }
@@ -82,42 +82,31 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Convert Source to Metadata') {
-		    //rc = bat returnStatus: true, script: "${toolbelt} force:source:convert --outputdir ${DEPLOYDIR}"
-		    //if (rc != 0) {
-			//error 'Salesforce convert source to metadata run failed.'
-		    //}
+		    rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
+		    if (rc != 0) {
+			error 'Salesforce convert source to metadata run failed.'
+		    }
 		}
 		
 		// -------------------------------------------------------------------------
 		// Deploy metadata and execute unit tests.
 		// -------------------------------------------------------------------------
 
-		stage('Deploy and Run Tests') {
-		    //rc = bat returnStatus: true, script: "${toolbelt} force:mdapi:deploy --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		    //if (rc != 0) {
-			//error 'Salesforce deploy and test run failed.'
-		    //}
-		}
+		
 
 
 		// -------------------------------------------------------------------------
 		// Example shows how to run a check-only deploy.
 		// -------------------------------------------------------------------------
 
-		//stage('Check Only Deploy') {
-		//    rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		//    if (rc != 0) {
-		//        error 'Salesforce deploy failed.'
-		//    }
-		//}
+		stage('Check Only Deploy') {
+		   rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		   if (rc != 0) {
+		       error 'Salesforce deploy failed.'
+		    }
+		}
 		
 		
-		tage('Check Only Deploy') {
-		//    rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		//    if (rc != 0) {
-		//        error 'Salesforce deploy failed.'
-		//    }
-		//}
 	    }
 	}
 }
