@@ -5,11 +5,20 @@ node {
     def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
     def SF_USERNAME=env.SF_USERNAME
     def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
+	
+	def SF_CONSUMER_KEY_TEST=env.SF_CONSUMER_KEY
+    def SF_USERNAME=env.SF_USERNAME
+    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
+	
     def DEPLOYDIR='src'
 	def UATDEPLOYER='uat-deployer/'
     def TEST_LEVEL='NoTestRun'
+	def DEV_BRANCH='dev'
+	def MASTER_BRANCH='master'
+	
+	
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://test.salesforce.com"
-
+	
 
     def toolbelt = tool 'toolbelt'
 	def bitbash = tool 'bitbash'
@@ -37,8 +46,6 @@ node {
 		// Authenticate to Salesforce using the server key.
 		// -------------------------------------------------------------------------
 		
-		
-
 		//stage('Update CLI') {
 			//rc = bat returnStatus: true, script: "${toolbelt} update"
 		    //if (rc != 0) {
@@ -55,16 +62,14 @@ node {
 		
 		// get updated files
 		stage('get update files from repo') {
-			//rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
 			//rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
-							
-		    if (rc != 0) {
+			if (rc != 0) {
 			error 'Salesforce org authorization failed.'
 		    }
 		}
 		
 		stage('call perl script') {
-			rc = bat returnStatus: true, script: "perl perl1.pl"
+			//rc = bat returnStatus: true, script: "perl perl1.pl"
 			rc = bat returnStatus: true, script: "perl DeployBuild.pl"
 		    if (rc != 0) {
 			error 'perl execution failed.'
@@ -100,6 +105,14 @@ node {
 		// -------------------------------------------------------------------------
 
 		//stage('Check Only Deploy') {
+		//    rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		//    if (rc != 0) {
+		//        error 'Salesforce deploy failed.'
+		//    }
+		//}
+		
+		
+		tage('Check Only Deploy') {
 		//    rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
 		//    if (rc != 0) {
 		//        error 'Salesforce deploy failed.'
