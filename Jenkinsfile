@@ -3,19 +3,18 @@
 node {
 
     def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    def SF_USERNAME=env.SF_USERNAME
+    //def SF_USERNAME=env.SF_USERNAME
     def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
-		
+	
+	
     def DEPLOYDIR='src'
 	def UATDEPLOYER='uat-deployer/'
     def TEST_LEVEL='NoTestRun'
 	def DEV_BRANCH='dev'
 	def MASTER_BRANCH='master'
-	
-	
+		
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://test.salesforce.com"
 	
-
     def toolbelt = tool 'toolbelt'
 	def bitbash = tool 'bitbash'
 	//def toolbelt = tool name: 'toolbelt', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
@@ -48,6 +47,7 @@ node {
 			//error 'CLI update failed.'
 		    //}
 		//}
+		
 		
 		stage('Authorize to Salesforce') {
 			rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
@@ -96,7 +96,7 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Check Only Deploy') {
-		   rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		   rc = command "${toolbelt} force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
 		   if (rc != 0) {
 		       error 'Salesforce deploy failed.'
 		    }
