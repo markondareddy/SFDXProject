@@ -1,6 +1,6 @@
 #!groovy
 
-node 
+node {
 
     def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID	
     def DEPLOYDIR='src'
@@ -100,8 +100,7 @@ node
 				
 	    }
 	}
-
-
+}
 def command(script) {
     if (isUnix()) {
         return sh(returnStatus: true, script: script);
