@@ -73,7 +73,7 @@ node {
 		
 		// get updated files
 		stage('get update files from repo') {
-			//rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
+			rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
 			if (rc != 0) {
 			error 'Salesforce org authorization failed.'
 		    }
@@ -84,7 +84,7 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Convert Source to Metadata') {
-		    //rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
+		    rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
 		    if (rc != 0) {
 			error 'Salesforce convert source to metadata run failed.'
 		    }
