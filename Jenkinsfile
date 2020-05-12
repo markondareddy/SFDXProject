@@ -1,26 +1,13 @@
 #!groovy
 
-node {
+node 
 
-    def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    //def SF_USERNAME=env.SF_USERNAME
-    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
-	
-	
+    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID	
     def DEPLOYDIR='src'
-	def UATDEPLOYER='uat-deployer/'
-    def TEST_LEVEL='NoTestRun'
-	def DEV_BRANCH='dev'
-	def MASTER_BRANCH='master'
-		
-    def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://test.salesforce.com"
+	def TEST_LEVEL='NoTestRun'
+	def toolbelt = tool 'toolbelt'
 	
-    def toolbelt = tool 'toolbelt'
-	def bitbash = tool 'bitbash'
-	//def toolbelt = tool name: 'toolbelt', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
-	echo "toolbelt = ${toolbelt}"
-
-    // -------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
     // Check out code from source control.
     // -------------------------------------------------------------------------
 
@@ -28,6 +15,25 @@ node {
         checkout scm
     }
 
+
+	
+	// -------------------------------------------------------------------------
+    // branch selection.
+    // -------------------------------------------------------------------------
+	stage('branch selection'){
+		
+		if (env.BRANCH_NAME == 'dev') {
+			def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_DEV
+			def SF_USERNAME=env.SF_USERNAME_DEV
+			def SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV
+			            
+        } else if (env.BRANCH_NAME == 'release') {
+			def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
+			def SF_USERNAME=env.SF_USERNAME_RELEASE
+			def SF_INSTANCE_URL = env.SF_INSTANCE_URL_PROD		
+		}
+		
+	}
 
     // -------------------------------------------------------------------------
     // Run all the enclosed stages with access to the Salesforce
@@ -41,18 +47,24 @@ node {
 		// Authenticate to Salesforce using the server key.
 		// -------------------------------------------------------------------------
 		
-		//stage('Update CLI') {
-			//rc = bat returnStatus: true, script: "${toolbelt} update"
-		    //if (rc != 0) {
-			//error 'CLI update failed.'
-		    //}
-		//}
-		
-		
+			
+	// -------------------------------------------------------------------------
+    // Authorize to Salesforce.
+    // -------------------------------------------------------------------------
 		stage('Authorize to Salesforce') {
 			rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
 		    if (rc != 0) {
 			error 'Salesforce org authorization failed.'
+		    }
+		}
+		
+	
+
+		//Run test classes
+		stage('Running apex test classes') {
+			rc = bat returnStatus: true, script: "${toolbelt} force:apex:test:run"
+		    if (rc != 0) {
+			error 'Salesforce apex test classes failed.'
 		    }
 		}
 		
@@ -64,15 +76,6 @@ node {
 		    }
 		}
 		
-		stage('call perl script') {
-			//rc = bat returnStatus: true, script: "perl perl1.pl"
-			//rc = bat returnStatus: true, script: "perl DeployBuild.pl"
-		    if (rc != 0) {
-			error 'perl execution failed.'
-		    }
-		}
-		
-
 		// -------------------------------------------------------------------------
 		// Convert metadata.
 		// -------------------------------------------------------------------------
@@ -85,13 +88,6 @@ node {
 		}
 		
 		// -------------------------------------------------------------------------
-		// Deploy metadata and execute unit tests.
-		// -------------------------------------------------------------------------
-
-		
-
-
-		// -------------------------------------------------------------------------
 		// Example shows how to run a check-only deploy.
 		// -------------------------------------------------------------------------
 
@@ -101,8 +97,7 @@ node {
 		       error 'Salesforce deploy failed.'
 		    }
 		}
-		
-		
+				
 	    }
 	}
 }
