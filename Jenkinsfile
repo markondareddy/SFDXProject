@@ -1,20 +1,13 @@
 #!groovy
 
-node {
+node 
 
-    def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    def SF_USERNAME=env.SF_USERNAME
-    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
+    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID	
     def DEPLOYDIR='src'
-    def TEST_LEVEL='NoTestRun'
-    def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://test.salesforce.com"
-
-
-    def toolbelt = tool 'toolbelt'
-	//def toolbelt = tool name: 'toolbelt', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
-	echo "toolbelt = ${toolbelt}"
-
-    // -------------------------------------------------------------------------
+	def TEST_LEVEL='NoTestRun'
+	def toolbelt = tool 'toolbelt'
+	
+	// -------------------------------------------------------------------------
     // Check out code from source control.
     // -------------------------------------------------------------------------
 
@@ -22,6 +15,25 @@ node {
         checkout scm
     }
 
+
+	
+	// -------------------------------------------------------------------------
+    // branch selection.
+    // -------------------------------------------------------------------------
+	stage('branch selection'){
+		
+		if (env.BRANCH_NAME == 'dev') {
+			def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_DEV
+			def SF_USERNAME=env.SF_USERNAME_DEV
+			def SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV
+			            
+        } else if (env.BRANCH_NAME == 'release') {
+			def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
+			def SF_USERNAME=env.SF_USERNAME_RELEASE
+			def SF_INSTANCE_URL = env.SF_INSTANCE_URL_PROD		
+		}
+		
+	}
 
     // -------------------------------------------------------------------------
     // Run all the enclosed stages with access to the Salesforce
@@ -34,54 +46,58 @@ node {
 		// -------------------------------------------------------------------------
 		// Authenticate to Salesforce using the server key.
 		// -------------------------------------------------------------------------
-
-		//stage('Update CLI') {
-			//rc = bat returnStatus: true, script: "${toolbelt} update"
-		    //if (rc != 0) {
-			//error 'CLI update failed.'
-		    //}
-		//}
 		
+			
+	// -------------------------------------------------------------------------
+    // Authorize to Salesforce.
+    // -------------------------------------------------------------------------
 		stage('Authorize to Salesforce') {
 			rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
 		    if (rc != 0) {
 			error 'Salesforce org authorization failed.'
 		    }
 		}
+		
+	
 
+		//Run test classes
+		stage('Running apex test classes') {
+			rc = bat returnStatus: true, script: "${toolbelt} force:apex:test:run"
+		    if (rc != 0) {
+			error 'Salesforce apex test classes failed.'
+		    }
+		}
+		
+		// get updated files
+		stage('get update files from repo') {
+			//rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
+			if (rc != 0) {
+			error 'Salesforce org authorization failed.'
+		    }
+		}
+		
 		// -------------------------------------------------------------------------
 		// Convert metadata.
 		// -------------------------------------------------------------------------
 
 		stage('Convert Source to Metadata') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:source:convert --outputdir ${DEPLOYDIR}"
+		    //rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
 		    if (rc != 0) {
 			error 'Salesforce convert source to metadata run failed.'
 		    }
 		}
 		
 		// -------------------------------------------------------------------------
-		// Deploy metadata and execute unit tests.
-		// -------------------------------------------------------------------------
-
-		stage('Deploy and Run Tests') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:mdapi:deploy --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		    if (rc != 0) {
-			error 'Salesforce deploy and test run failed.'
-		    }
-		}
-
-
-		// -------------------------------------------------------------------------
 		// Example shows how to run a check-only deploy.
 		// -------------------------------------------------------------------------
 
-		//stage('Check Only Deploy') {
-		//    rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		//    if (rc != 0) {
-		//        error 'Salesforce deploy failed.'
-		//    }
-		//}
+		stage('Check Only Deploy') {
+		   //rc = command "${toolbelt} force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		   if (rc != 0) {
+		       error 'Salesforce deploy failed.'
+		    }
+		}
+				
 	    }
 	}
 }
