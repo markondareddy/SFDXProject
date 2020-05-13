@@ -59,7 +59,7 @@ node {
     // Run apex test classes.
     // ------------------------------------------------------------------------
 		stage('Running apex test classes') {
-			rc = bat returnStatus: true, script: "${toolbelt} force:apex:test:run --targetusername dev7org --testlevel RunAllTestsInOrg"
+			rc = bat returnStatus: true, script: "${toolbelt} force:apex:test:run --targetusername dev7org --testlevel RunAllTestsInOrg -w 600 -r human"
 		    if (rc != 0) {
 			error 'Salesforce apex test classes failed.'
 		    }
