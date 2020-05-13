@@ -18,7 +18,7 @@ node {
 		}
 	
 	// ------------------------------------------------------------------------
-    // Select branch from repo and read values from Jenkins and asssing to variables
+    // Select branch from repo and read values from Jenkins and asssing to variables.
     // ------------------------------------------------------------------------
 		stage('select branch from source repository'){
 		
@@ -34,7 +34,7 @@ node {
 		}
 
     // ------------------------------------------------------------------------
-    // Run all the enclosed stages with access to the Salesforce
+    // Run all the enclosed stages with access to the Salesforce.
     // JWT key credentials.
     // ------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ node {
 		}
 		
 	// ------------------------------------------------------------------------
-	// how to run a check-only deploy.
+	// How to run a check-only deploy.
 	// ------------------------------------------------------------------------
 		stage('Check Only Deploy') {
 		   rc = command "${toolbelt} force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
