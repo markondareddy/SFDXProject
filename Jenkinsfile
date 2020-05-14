@@ -10,6 +10,11 @@ node {
 	def TEST_LEVEL='NoTestRun'
 	def toolbelt = tool 'toolbelt'
 	
+	triggers {
+			cron('H/2 * * * *')
+			}
+		
+		
 	// ------------------------------------------------------------------------
     // Check out code from source control.
     // ------------------------------------------------------------------------
@@ -17,12 +22,7 @@ node {
         checkout scm
 		}
 
-
-		stage('trigger build') {
-        triggers {
-			cron('H/2 * * * *')
-			}
-		}
+        
 		
 	// ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
