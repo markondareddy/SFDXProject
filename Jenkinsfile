@@ -11,7 +11,7 @@ node {
 	def toolbelt = tool 'toolbelt'
 	
 	if (env.BRANCH_NAME == 'release') {
-    build '../sfdxproject/release'
+    build 'markondareddy/sfdxproject/release'
 	}
 }
 
