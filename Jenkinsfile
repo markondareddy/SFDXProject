@@ -11,7 +11,8 @@ node {
 	def toolbelt = tool 'toolbelt'
 	
 	if (env.BRANCH_NAME == 'release') {
-    build 'markondareddy/sfdxproject/release'
+    //build 'markondareddy/sfdxproject/release'
+	build job: 'build', parameters: [[$class: 'StringParameterValue', name: 'target', value: target], [$class: 'ListSubversionTagsParameterValue', name: 'release', tag: release], [$class: 'BooleanParameterValue', name: 'update_composer', value: update_composer]]
 	}
 }
 
