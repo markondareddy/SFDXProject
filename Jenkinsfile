@@ -9,6 +9,21 @@ node {
     def DEPLOYDIR='src'
 	def TEST_LEVEL='NoTestRun'
 	def toolbelt = tool 'toolbelt'
+	def triggers = []
+
+	if(env.BRANCH_NAME == 'dev') {
+		triggers << cron('H/1 * * * *') // every 1 minutes
+		} else if(env.BRANCH_NAME == 'release') {
+			triggers << cron('H H(0-2) * * *') // daily between midnight & 2 AM
+			} else {
+				// no scheduled build
+	}
+
+	properties (
+		[
+        pipelineTriggers(triggers)
+		]
+	)
 
     // ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
