@@ -11,6 +11,11 @@ node {
 	def toolbelt = tool 'toolbelt'	
 	def triggers = [dev,release]
 
+	properties (
+		[
+			pipelineTriggers(triggers)
+		]
+	)
 	if(env.BRANCH_NAME  == 'dev') {
     triggers << cron('H/15 * * * *') // every 15 minutes
 	} else if(env.BRANCH_NAME  == 'release') {
@@ -19,24 +24,7 @@ node {
     // no scheduled build
 	}
 
-	properties (
-		[
-			pipelineTriggers(triggers)
-		]
-	)
 	
-	
-
-	
-	/*properties(
-    [
-        // other properties that you have
-        pipelineTriggers([cron('H/1 * * * *')])
-    ]
-	)
-	properties([pipelineTriggers([pollSCM('H/2 * * * *')])]) */
-	
-
 		
 	// ------------------------------------------------------------------------
     // Check out code from source control.
