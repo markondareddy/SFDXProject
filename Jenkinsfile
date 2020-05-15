@@ -18,18 +18,6 @@ node {
 		]
 	)
 
-	if(env.BRANCH_NAME  == 'dev') {
-    triggers << cron('H/15 * * * *') // every 15 minutes
-	} else if(env.BRANCH_NAME  == 'release') {
-		triggers << cron('H/2 * * * *') // every 15 minutes
-	} else {
-    // no scheduled build
-	}
-
-	
-	
-	
-
 	
 	/*properties(
     [
@@ -49,7 +37,16 @@ node {
 		}
 
         
-		
+	
+	if(env.BRANCH_NAME  == 'dev') {
+    triggers << cron('H/15 * * * *') // every 15 minutes
+	} else if(env.BRANCH_NAME  == 'release') {
+		triggers << cron('H/2 * * * *') // every 15 minutes
+	} else {
+    // no scheduled build
+	}
+	
+	
 	// ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
 	// asssing values to variables.
