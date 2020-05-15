@@ -10,10 +10,12 @@ node {
 	def TEST_LEVEL='NoTestRun'
 	def toolbelt = tool 'toolbelt'
 	
-	triggers {
-			cron('H/2 * * * *')
-			}
-		
+	properties(
+    [
+        // other properties that you have
+        pipelineTriggers([cron('H/1 * * * *')])
+    ]
+	)
 		
 	// ------------------------------------------------------------------------
     // Check out code from source control.
