@@ -17,12 +17,14 @@ node {
 		]
 	)
 	
+	stage('PollSCM trigger') {
 	if(env.BRANCH_NAME  == 'dev') {
-    triggers << cron('H/15 * * * *') // every 15 minutes
+    rc = bat returnStatus: true, script: "triggers << cron('H/15 * * * *')" // every 15 minutes
 	} else if(env.BRANCH_NAME  == 'release') {
-		triggers << cron('H/1 * * * *') // every 15 minutes
+		rc = bat returnStatus: true, script: "triggers << cron('H/1 * * * *')" // every 15 minutes
 	} else {
     // no scheduled build
+	}
 	}
 
 	
