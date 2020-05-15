@@ -32,6 +32,25 @@ node {
 				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV		
 			}		
 		}
+		
+	withEnv(["HOME=${env.WORKSPACE}"]) {	
+	
+	    withCredentials([file(credentialsId: SERVER_KEY_CREDENTIALS_ID, variable: 'server_key_file')]) {
+		// --------------------------------------------------------------------
+		// Authenticate to Salesforce using the server key.
+		// --------------------------------------------------------------------
+		
+		stage('Update CLI') {
+			//rc = bat returnStatus: true, script: "${toolbelt} update"
+		    if (rc != 0) {
+			error 'CLI update failed.'
+		    }
+		}
+		
+	
+				
+	    }
+	}
 
 
 	
