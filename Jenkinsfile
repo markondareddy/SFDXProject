@@ -10,12 +10,13 @@ node {
 	def TEST_LEVEL='NoTestRun'
 	def toolbelt = tool 'toolbelt'
 	
-	properties(
+	/*properties(
     [
         // other properties that you have
         pipelineTriggers([cron('H/1 * * * *')])
     ]
-	)
+	)*/
+	properties([pipelineTriggers([pollSCM('H/2 * * * *')])])
 		
 	// ------------------------------------------------------------------------
     // Check out code from source control.
