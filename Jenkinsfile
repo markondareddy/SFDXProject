@@ -33,67 +33,6 @@ node {
 			}		
 		}
 
-    // ------------------------------------------------------------------------
-    // Run all the enclosed stages with access to the Salesforce.
-    // JWT key credentials.
-    // ------------------------------------------------------------------------
-
- 	withEnv(["HOME=${env.WORKSPACE}"]) {	
-	
-	    withCredentials([file(credentialsId: SERVER_KEY_CREDENTIALS_ID, variable: 'server_key_file')]) {
-		// --------------------------------------------------------------------
-		// Authenticate to Salesforce using the server key.
-		// --------------------------------------------------------------------
-		
-		stage('Update CLI') {
-			//rc = bat returnStatus: true, script: "${toolbelt} update"
-		    if (rc != 0) {
-			error 'CLI update failed.'
-		    }
-		}
-		
-	// ------------------------------------------------------------------------
-    // Authorize to Salesforce.
-    // ------------------------------------------------------------------------
-		stage('Authorize to Salesforce') {
-			rc = bat returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias dev7org"
-		    if (rc != 0) {
-			error 'Salesforce org authorization failed.'
-		    }
-		}
-	
-	// ------------------------------------------------------------------------
-    // Get updated files from two branches.
-    // ------------------------------------------------------------------------
-		stage('get update files from repo') {
-			//rc = bat returnStatus: true, script: "${bitbash} git diff --name-only uat master | xargs git checkout-index -f --prefix=${UATDEPLOYER}" 
-			if (rc != 0) {
-			error 'Salesforce org authorization failed.'
-		    }
-		}
-			
-	// ------------------------------------------------------------------------
-	// Convert metadata.
-	// ------------------------------------------------------------------------
-		stage('Convert Source to Metadata') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
-		    if (rc != 0) {
-			error 'Salesforce convert source to metadata run failed.'
-		    }
-		}
-		
-	// ------------------------------------------------------------------------
-	// How to run a check-only deploy.
-	// ------------------------------------------------------------------------
-		stage('Check Only Deploy') {
-		   rc = command "${toolbelt} force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		   if (rc != 0) {
-		       error 'Salesforce deploy failed.'
-		    }
-		}
-				
-	    }
-	}
 
 	
 }
