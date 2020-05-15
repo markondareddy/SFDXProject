@@ -2,17 +2,30 @@
 
 node {
 
-    def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    def SF_USERNAME=env.SF_USERNAME
-    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID
+    def SF_CONSUMER_KEY
+	def SF_USERNAME
+	def SF_INSTANCE_URL
+    def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID	
     def DEPLOYDIR='src'
-    def TEST_LEVEL='NoTestRun'
-    def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://test.salesforce.com"
+	def TEST_LEVEL='NoTestRun'
+	def toolbelt = tool 'toolbelt'
 
+    // ------------------------------------------------------------------------
+    // Select branch from repo and read values from Jenkins global variables
+	// asssing values to variables.
+    // ------------------------------------------------------------------------
+		stage('select branch from source repository'){
+			if (env.BRANCH_NAME == 'dev') {
+				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_DEV
+				SF_USERNAME=env.SF_USERNAME_DEV
+				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV							
+			} else if (env.BRANCH_NAME == 'release') {
+				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
+				SF_USERNAME=env.SF_USERNAME_RELEASE
+				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV		
+			}		
+		}
 
-    def toolbelt = tool 'toolbelt'
-	//def toolbelt = tool name: 'toolbelt', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
-	echo "toolbelt = ${toolbelt}"
 
     // -------------------------------------------------------------------------
     // Check out code from source control.
@@ -54,7 +67,7 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Convert Source to Metadata') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:source:convert --outputdir ${DEPLOYDIR}"
+		    //rc = bat returnStatus: true, script: "${toolbelt} force:source:convert --outputdir ${DEPLOYDIR}"
 		    if (rc != 0) {
 			error 'Salesforce convert source to metadata run failed.'
 		    }
@@ -65,7 +78,7 @@ node {
 		// -------------------------------------------------------------------------
 
 		stage('Deploy and Run Tests') {
-		    rc = bat returnStatus: true, script: "${toolbelt} force:mdapi:deploy --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		    //rc = bat returnStatus: true, script: "${toolbelt} force:mdapi:deploy --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
 		    if (rc != 0) {
 			error 'Salesforce deploy and test run failed.'
 		    }
