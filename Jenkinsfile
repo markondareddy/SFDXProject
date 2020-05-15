@@ -110,6 +110,22 @@ node {
 		//        error 'Salesforce deploy failed.'
 		//    }
 		//}
+		
+		
+		//Send email notifications
+		
+		stage('Send email') {
+			def mailRecipients = "markonda.reddy@rrd.com"
+			//def jobName = currentBuild.fullDisplayName
+
+			emailext body: '''${SCRIPT, template="groovy-html.template"}''',
+			mimeType: 'text/html',
+			subject: "[Jenkins] ${JOB_NAME}",
+			to: "${mailRecipients}",
+			replyTo: "${mailRecipients}",
+			recipientProviders: [[$class: 'CulpritsRecipientProvider']]
+			}
+		
 	    }
 	}
 }
