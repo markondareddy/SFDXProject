@@ -16,6 +16,7 @@ node {
 			pipelineTriggers(triggers)
 		]
 	)
+	
 	if(env.BRANCH_NAME  == 'dev') {
     triggers << cron('H/15 * * * *') // every 15 minutes
 	} else if(env.BRANCH_NAME  == 'release') {
