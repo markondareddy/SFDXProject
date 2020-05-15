@@ -11,7 +11,7 @@ node {
 	def toolbelt = tool 'toolbelt'	
 	def triggers = []
 
-	properties (
+	/* properties (
 		[
 			pipelineTriggers(triggers)
 		]
@@ -26,6 +26,7 @@ node {
     // no scheduled build
 	}
 	}
+	*/
 
 	
 		
