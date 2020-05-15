@@ -8,37 +8,15 @@ node {
     def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID	
     def DEPLOYDIR='src'
 	def TEST_LEVEL='NoTestRun'
-	def toolbelt = tool 'toolbelt'	
-	def triggers = []
-
-	/* properties (
-		[
-			pipelineTriggers(triggers)
-		]
-	)
+	def toolbelt = tool 'toolbelt'
 	
-	stage('PollSCM trigger') {
-	if(env.BRANCH_NAME  == 'dev') {
-    rc = bat returnStatus: true, script: "triggers << cron('H/15 * * * *')" // every 15 minutes
-	} else if(env.BRANCH_NAME  == 'release') {
-		rc = bat returnStatus: true, script: "triggers << cron('H/1 * * * *')" // every 15 minutes
-	} else {
-    // no scheduled build
-	}
-	}
-	*/
-
-	
-		
 	// ------------------------------------------------------------------------
     // Check out code from source control.
     // ------------------------------------------------------------------------
 		stage('checkout source') {
         checkout scm
 		}
-
-        
-		
+	
 	// ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
 	// asssing values to variables.
@@ -54,9 +32,6 @@ node {
 				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV		
 			}		
 		}
-		
-		
-		
 
     // ------------------------------------------------------------------------
     // Run all the enclosed stages with access to the Salesforce.
@@ -113,7 +88,7 @@ node {
 	// Convert metadata.
 	// ------------------------------------------------------------------------
 		stage('Convert Source to Metadata') {
-		   // rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
+		    //rc = bat returnStatus: true, script: "${toolbelt} force:source:convert -p uatdeploy --outputdir ${DEPLOYDIR}"
 		    if (rc != 0) {
 			error 'Salesforce convert source to metadata run failed.'
 		    }
