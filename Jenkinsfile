@@ -8,15 +8,24 @@ node {
     def SERVER_KEY_CREDENTIALS_ID=env.SERVER_KEY_CREDENTIALS_ID	
     def DEPLOYDIR='src'
 	def TEST_LEVEL='NoTestRun'
-	def toolbelt = tool 'toolbelt'
-	
-	def triggers = []
-	
+	def toolbelt = tool 'toolbelt'	
+	def triggers = [dev,release]
+
+	if(env.BRANCH_NAME  == 'dev') {
+    triggers << cron('H/15 * * * *') // every 15 minutes
+	} else if(env.BRANCH_NAME  == 'release') {
+		triggers << cron('H/2 * * * *') // every 15 minutes
+	} else {
+    // no scheduled build
+	}
+
 	properties (
 		[
 			pipelineTriggers(triggers)
 		]
 	)
+	
+	
 
 	
 	/*properties(
@@ -37,16 +46,7 @@ node {
 		}
 
         
-	
-	if(env.BRANCH_NAME  == 'dev') {
-    triggers << cron('H/15 * * * *') // every 15 minutes
-	} else if(env.BRANCH_NAME  == 'release') {
-		triggers << cron('H/2 * * * *') // every 15 minutes
-	} else {
-    // no scheduled build
-	}
-	
-	
+		
 	// ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
 	// asssing values to variables.
