@@ -111,6 +111,10 @@ node {
 		//    }
 		//}
 		
+		//Downstream job configuration
+		stage ('Starting downstream job ') {
+			build job: 'markondareddy/sfdxproject/release'
+		}
 		
 		//Send email notifications		
 		stage('Send email') {
