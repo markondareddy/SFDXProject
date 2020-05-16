@@ -128,6 +128,12 @@ node {
 			replyTo: "${mailRecipients}",
 			recipientProviders: [[$class: 'CulpritsRecipientProvider']]
 			}
+			
+			//Downstream configurations
+			stage ('Starting downstream job ') {
+					build job: 'markondareddy/sfdxproject/uat'
+			}
+
 		
 	    }
 	}
