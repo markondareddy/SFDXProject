@@ -131,7 +131,7 @@ node {
 			
 			//Downstream configurations
 			stage ('Starting downstream job ') {
-					build job: '..\workspace\sfdx-multibranch-pipeline_uat'
+					build job: '../workspace/sfdx-multibranch-pipeline_uat'
 			}
 
 		
