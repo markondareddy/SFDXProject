@@ -128,12 +128,12 @@ node {
 			replyTo: "${mailRecipients}",
 			recipientProviders: [[$class: 'CulpritsRecipientProvider']]
 			}
-			
+			/*
 			//Downstream configurations
 			stage ('Starting downstream job ') {
 					build job: '../workspace/fdx-multibranch-pipeline_release'
 			}
-
+			*/
 		
 	    }
 	}
