@@ -112,8 +112,7 @@ node {
 		//}
 		
 		
-		//Send email notifications
-		
+		//Send email notifications		
 		stage('Send email') {
 			def mailRecipients = "markonda.reddy@rrd.com"
 			//def jobName = currentBuild.fullDisplayName
