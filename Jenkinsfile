@@ -14,7 +14,7 @@ node {
 	if(env.BRANCH_NAME == 'dev') {
 		triggers << cron('H/1 * * * *') // every 1 minutes
 		} else if(env.BRANCH_NAME == 'release') {
-			triggers << cron('H H(0-2) * * *') // daily between midnight & 2 AM
+			triggers << cron('* * * * *') // daily between midnight & 2 AM
 			} else {
 				// no scheduled build
 	}
@@ -34,7 +34,7 @@ node {
 				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_DEV
 				SF_USERNAME=env.SF_USERNAME_DEV
 				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV							
-			} else if (env.BRANCH_NAME == 'uat') {
+			} else if (env.BRANCH_NAME == 'release') {
 				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
 				SF_USERNAME=env.SF_USERNAME_RELEASE
 				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV		
@@ -131,7 +131,7 @@ node {
 			
 			//Downstream configurations
 			stage ('Starting downstream job ') {
-					build job: '../workspace/sfdx-multibranch-pipeline_uat'
+					build job: '../workspace/fdx-multibranch-pipeline_release'
 			}
 
 		
