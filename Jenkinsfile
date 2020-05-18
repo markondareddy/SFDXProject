@@ -26,8 +26,7 @@ node {
 				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
 				SF_USERNAME=env.SF_USERNAME_RELEASE
 				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV
-				echo ".....Release branch"
-				properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
+				
 			}		
 		}
 
@@ -103,32 +102,19 @@ node {
 			
 			
 		//Email notifications.		
-		stage('Send email') {	
-			if (currentBuild.currentResult == 'SUCCESS')
-			{
+		stage('Send email') {			
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
 			recipientProviders: [developers(), brokenBuildSuspects()], 
 			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
-			to: 'markonda.reddy@rrd.com'
-			} else if ((currentBuild.currentResult == 'FAILURE'){
-			emailext attachLog: true, 
-			body: '$DEFAULT_CONTENT', 
-			recipientProviders: [developers(), brokenBuildSuspects()], 
-			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
-			to: 'markonda.reddy@rrd.com'
-			}
+			to: 'markonda.reddy@rrd.com'			
 		}
-		//Downstream job configurations
-		//properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
-			
-		/*
-		//Downstream configurations
-		//stage ('Starting downstream job ') {
-		//build job: '../workspace/fdx-multibranch-pipeline_release'
-		//}
-		*/
 		
+		
+		//Downstream job configurations
+		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
+			
+				
 	    }
 	}
 }
