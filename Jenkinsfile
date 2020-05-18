@@ -111,11 +111,10 @@ node {
 		//    }
 		//}
 				
-		//Send email notifications		
+		//Email notifications.		
 		stage('Send email') {
 			def mailRecipients = "markonda.reddy@rrd.com"
-			//def jobName = currentBuild.fullDisplayName
-
+			
 			emailext body: '''${SCRIPT, template="groovy-html.template"}''',
 			mimeType: 'text/html',
 			subject: "[Jenkins] ${JOB_NAME}",
@@ -123,6 +122,7 @@ node {
 			replyTo: "${mailRecipients}",
 			recipientProviders: [[$class: 'CulpritsRecipientProvider']]
 			}
+			
 			/*
 			//Downstream configurations
 			//stage ('Starting downstream job ') {
