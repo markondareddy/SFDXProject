@@ -114,8 +114,9 @@ node {
 		//Email notifications.		
 		stage('Send email') {
 			emailext attachLog: true, 
-			body: '$DEFAULT_CONTENT', recipientProviders: [developers(), brokenBuildSuspects()], 
-			subject: '[Jenkins]$DEFAULT_SUBJECT', 
+			body: '$DEFAULT_CONTENT', 
+			recipientProviders: [developers(), brokenBuildSuspects()], 
+			subject: '[Jenkins] $DEFAULT_SUBJECT', 
 			to: 'markonda.reddy@rrd.com'
 			}
 			
