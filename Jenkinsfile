@@ -25,7 +25,9 @@ node {
 			} else if (env.BRANCH_NAME == 'release') {
 				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
 				SF_USERNAME=env.SF_USERNAME_RELEASE
-				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV		
+				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV
+				echo ".....Release branch
+				properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
 			}		
 		}
 
@@ -101,17 +103,15 @@ node {
 			
 			
 		//Email notifications.		
-		stage('Send email') {
-			always {
+		stage('Send email') {			
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
 			recipientProviders: [developers(), brokenBuildSuspects()], 
 			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
-			to: 'markonda.reddy@rrd.com'
-			}
+			to: 'markonda.reddy@rrd.com'			
 		}
 		//Downstream job configurations
-		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
+		//properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
 			
 		/*
 		//Downstream configurations
