@@ -130,9 +130,9 @@ node {
 			}
 			/*
 			//Downstream configurations
-			stage ('Starting downstream job ') {
-					build job: '../workspace/fdx-multibranch-pipeline_release'
-			}
+			//stage ('Starting downstream job ') {
+					//build job: '../workspace/fdx-multibranch-pipeline_release'
+			//}
 			*/
 		
 	    }
