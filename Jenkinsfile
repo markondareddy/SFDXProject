@@ -103,12 +103,21 @@ node {
 			
 			
 		//Email notifications.		
-		stage('Send email') {			
+		stage('Send email') {	
+			if (currentBuild.currentResult == 'SUCCESS')
+			{
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
 			recipientProviders: [developers(), brokenBuildSuspects()], 
 			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
-			to: 'markonda.reddy@rrd.com'			
+			to: 'markonda.reddy@rrd.com'
+			} else if ((currentBuild.currentResult == 'FAILURE'){
+			emailext attachLog: true, 
+			body: '$DEFAULT_CONTENT', 
+			recipientProviders: [developers(), brokenBuildSuspects()], 
+			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
+			to: 'markonda.reddy@rrd.com'
+			}
 		}
 		//Downstream job configurations
 		//properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
