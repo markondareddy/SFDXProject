@@ -101,7 +101,7 @@ node {
 			
 			
 		//Email notifications.		
-		post {
+		stage('Send email') {
 			always {
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
