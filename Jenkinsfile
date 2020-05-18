@@ -113,18 +113,10 @@ node {
 				
 		//Email notifications.		
 		stage('Send email') {
-			def mailRecipients = "markonda.reddy@rrd.com"
-			
-			emailext body: '''${SCRIPT, template="groovy-html.template"}''',
-			mimeType: 'text/html',
-			subject: "[Jenkins] ${JOB_NAME}-Build# ${BUILD_NUMBER}",
-			to: "${mailRecipients}",
-			replyTo: "${mailRecipients}",
-			recipientProviders: [[$class: 'CulpritsRecipientProvider']]
-			archiveArtifacts artifacts: 'generatedFile.txt', onlyIfSuccessful: true            
-            echo 'I will always say Hello again!'
-                
-            emailext attachLog: true, attachmentsPattern: 'generatedFile.txt'
+			emailext attachLog: true, 
+			body: '$DEFAULT_CONTENT', recipientProviders: [developers(), brokenBuildSuspects()], 
+			subject: '[Jenkins] ${JOB_NAME}-Build# ${BUILD_NUMBER} - $DEFAULT_SUBJECT', 
+			to: 'markonda.reddy@rrd.com'
 			}
 			
 			/*
