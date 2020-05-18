@@ -9,8 +9,6 @@ node {
     def DEPLOYDIR='src'
 	def TEST_LEVEL='NoTestRun'
 	def toolbelt = tool 'toolbelt'
-	def triggers = []
-
 	
 
     // ------------------------------------------------------------------------
@@ -25,8 +23,7 @@ node {
 			} else if (env.BRANCH_NAME == 'release') {
 				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
 				SF_USERNAME=env.SF_USERNAME_RELEASE
-				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV
-				
+				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV		
 			}		
 		}
 
@@ -93,28 +90,24 @@ node {
 		// Example shows how to run a check-only deploy.
 		// -------------------------------------------------------------------------
 
-		//stage('Check Only Deploy') {
-		//    rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
-		//    if (rc != 0) {
-		//        error 'Salesforce deploy failed.'
-		//    }
-		//}
-			
-			
+		stage('Check Only Deploy') {
+			//rc = command "${toolbelt}/sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername dev7org --testlevel ${TEST_LEVEL}"
+		    if (rc != 0) {
+		        error 'Salesforce deploy failed.'
+		    }
+		}
+				
 		//Email notifications.		
 		stage('Send email') {			
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
-			recipientProviders: [developers(), brokenBuildSuspects()], 
-			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
-			to: 'markonda.reddy@rrd.com'			
-		}
-		
-		
-		//Downstream job configurations
-		//properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
+			recipientProviders: [developers(), brokenBuildSuspects()],  
+			subject: '[Jenkins] - $DEFAULT_SUBJECT', 
+			to: 'markonda.reddy@rrd.com'
+			}
 			
-				
+			
+		
 	    }
 	}
 }
