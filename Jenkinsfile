@@ -115,6 +115,7 @@ node {
 		stage('Send email') {
 			def mailRecipients = "markonda.reddy@rrd.com"
 			
+			emailext attachLog: true, attachmentsPattern: 'generatedFile.txt',
 			emailext body: '''${SCRIPT, template="groovy-html.template"}''',
 			mimeType: 'text/html',
 			subject: "[Jenkins] ${JOB_NAME}-Build# ${BUILD_NUMBER}",
