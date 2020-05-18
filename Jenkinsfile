@@ -110,12 +110,7 @@ node {
 		//        error 'Salesforce deploy failed.'
 		//    }
 		//}
-		
-		//Downstream job configuration
-		stage ('Starting downstream job ') {
-			build job: 'markondareddy/sfdxproject/release'
-		}
-		
+				
 		//Send email notifications		
 		stage('Send email') {
 			def mailRecipients = "markonda.reddy@rrd.com"
