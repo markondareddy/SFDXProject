@@ -115,7 +115,7 @@ node {
 		stage('Send email') {
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', recipientProviders: [developers(), brokenBuildSuspects()], 
-			subject: '[Jenkins] ${JOB_NAME}-Build# ${BUILD_NUMBER} - $DEFAULT_SUBJECT', 
+			subject: '[Jenkins]$DEFAULT_SUBJECT', 
 			to: 'markonda.reddy@rrd.com'
 			}
 			
