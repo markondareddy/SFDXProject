@@ -121,12 +121,15 @@ node {
 			to: 'markonda.reddy@rrd.com'
 			}
 			
-			/*
-			//Downstream configurations
-			//stage ('Starting downstream job ') {
-					//build job: '../workspace/fdx-multibranch-pipeline_release'
-			//}
-			*/
+		//Downstream job configurations
+		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/uat')])])
+			
+		/*
+		//Downstream configurations
+		//stage ('Starting downstream job ') {
+		//build job: '../workspace/fdx-multibranch-pipeline_release'
+		//}
+		*/
 		
 	    }
 	}
