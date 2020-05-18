@@ -110,14 +110,14 @@ node {
 		//        error 'Salesforce deploy failed.'
 		//    }
 		//}
-				
+			
+			
 		//Email notifications.		
 		stage('Send email') {
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
 			recipientProviders: [developers(), brokenBuildSuspects()], 
-			replyTo: 'markonda.reddy@rrd.com', 
-			subject: '[Jenkins] - $DEFAULT_SUBJECT', 
+			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
 			to: 'markonda.reddy@rrd.com'
 			}
 			
