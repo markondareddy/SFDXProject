@@ -26,7 +26,7 @@ node {
 				SF_CONSUMER_KEY=env.SF_CONSUMER_KEY_RELEASE
 				SF_USERNAME=env.SF_USERNAME_RELEASE
 				SF_INSTANCE_URL = env.SF_INSTANCE_URL_DEV
-				echo ".....Release branch
+				echo ".....Release branch"
 				properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
 			}		
 		}
