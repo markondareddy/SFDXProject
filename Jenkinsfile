@@ -11,19 +11,7 @@ node {
 	def toolbelt = tool 'toolbelt'
 	def triggers = []
 
-	if(env.BRANCH_NAME == 'dev') {
-		triggers << cron('H/1 * * * *') // every 1 minutes
-		} else if(env.BRANCH_NAME == 'release') {
-			triggers << cron('* * * * *') // daily between midnight & 2 AM
-			} else {
-				// no scheduled build
-	}
-
-	properties (
-		[
-        pipelineTriggers(triggers)
-		]
-	)
+	parallel dev: {
 
     // ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
@@ -122,7 +110,7 @@ node {
 			}
 			
 		//Downstream job configurations
-		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/uat')])])
+		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
 			
 		/*
 		//Downstream configurations
@@ -133,6 +121,16 @@ node {
 		
 	    }
 	}
+	
+	        // do something
+    }, uat: {
+        // do something else
+		echo "Running test job"
+    },
+    failFast: true|false
+
+	
+	
 }
 
 def command(script) {
