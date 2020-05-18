@@ -11,7 +11,7 @@ node {
 	def toolbelt = tool 'toolbelt'
 	def triggers = []
 
-	parallel dev: {
+	
 
     // ------------------------------------------------------------------------
     // Select branch from repo and read values from Jenkins global variables
@@ -101,14 +101,15 @@ node {
 			
 			
 		//Email notifications.		
-		stage('Send email') {
+		post {
+			always {
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
 			recipientProviders: [developers(), brokenBuildSuspects()], 
 			subject: '[Jenkins]-$DEFAULT_SUBJECT', 
 			to: 'markonda.reddy@rrd.com'
 			}
-			
+		}
 		//Downstream job configurations
 		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
 			
@@ -121,16 +122,6 @@ node {
 		
 	    }
 	}
-	
-	        // do something
-    }, uat: {
-        // do something else
-		echo "Running test job"
-    },
-    failFast: true|false
-
-	
-	
 }
 
 def command(script) {
