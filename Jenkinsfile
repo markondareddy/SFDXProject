@@ -112,7 +112,7 @@ node {
 		
 		
 		//Downstream job configurations
-		properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
+		//properties([pipelineTriggers([upstream('sfdx-multibranch-pipeline/dev')])])
 			
 				
 	    }
