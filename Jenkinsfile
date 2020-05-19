@@ -98,7 +98,7 @@ node {
 		}
 				
 		//Email notifications.		
-		stage('Send email') {			
+		post {			
 			emailext attachLog: true, 
 			body: '$DEFAULT_CONTENT', 
 			recipientProviders: [developers(), brokenBuildSuspects()],  
